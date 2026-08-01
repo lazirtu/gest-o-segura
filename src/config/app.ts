@@ -15,5 +15,10 @@ export const appConfig = {
  * em `src/routes` para manter a navegação centralizada.
  */
 export const routes = {
-  home: "/",
+  splash: "/",
+  signIn: "/auth",
+  signUp: "/auth/cadastro",
+  forgotPassword: "/auth/recuperar-senha",
+  resetPassword: "/redefinir-senha",
+  dashboard: "/dashboard",
 } as const;
