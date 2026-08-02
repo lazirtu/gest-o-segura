@@ -10,7 +10,7 @@ export function AppLayout({
 }: {
   children: ReactNode;
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 

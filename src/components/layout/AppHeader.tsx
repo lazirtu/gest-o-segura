@@ -10,7 +10,7 @@ export function AppHeader({
   onOpenMenu,
 }: {
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   onOpenMenu: () => void;
 }) {
   const { theme, toggleTheme } = useTheme();
