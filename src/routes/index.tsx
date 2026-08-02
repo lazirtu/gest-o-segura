@@ -39,14 +39,14 @@ function SplashPage() {
   }, [navigate]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background">
-      <div className="flex flex-col items-center gap-3">
-        <span className="bg-gradient-brand flex size-16 items-center justify-center rounded-2xl text-xl font-bold text-primary-foreground">
+    <div className="bg-gradient-brand flex min-h-screen flex-col items-center justify-center gap-8 text-primary-foreground">
+      <div className="animate-fade-in flex flex-col items-center gap-4">
+        <span className="grid size-16 place-items-center rounded-2xl bg-primary-foreground/15 text-xl font-bold backdrop-blur">
           GF
         </span>
         <span className="text-lg font-semibold tracking-tight">{appConfig.name}</span>
       </div>
-      <span className="size-5 animate-spin rounded-full border-2 border-muted border-t-primary" />
+      <span className="size-5 animate-spin rounded-full border-2 border-primary-foreground/25 border-t-primary-foreground" />
     </div>
   );
 }
