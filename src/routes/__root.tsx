@@ -80,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Gestão Segura — Controle financeiro premium" },
+      { title: "Gestão Segura — Suas finanças organizadas" },
       {
         name: "description",
         content:
           "Organize saldo, receitas, despesas e metas em um painel financeiro moderno.",
       },
       { name: "author", content: "Gestão Segura" },
-      { property: "og:title", content: "Gestão Segura" },
+      { property: "og:title", content: "Gestão Segura — Suas finanças organizadas" },
       {
         property: "og:description",
         content:
@@ -95,6 +95,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Gestão Segura — Suas finanças organizadas" },
+      { name: "twitter:description", content: "Organize saldo, receitas, despesas e metas em um painel financeiro moderno." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0555ca3a-1e56-4e2c-8692-2788e59c9c4e/id-preview-669cf239--02acca50-183e-4068-87c6-6cdc16251627.lovable.app-1785717073433.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0555ca3a-1e56-4e2c-8692-2788e59c9c4e/id-preview-669cf239--02acca50-183e-4068-87c6-6cdc16251627.lovable.app-1785717073433.png" },
     ],
     links: [
       {
