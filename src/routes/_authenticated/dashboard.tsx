@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function DashboardPage() {
   return (
     <AppLayout title="Visão geral" subtitle="Bem-vindo ao Gestão Segura">
-      <div className="animate-fade-in mx-auto w-full max-w-7xl space-y-5">
+      <div className="animate-fade-in mx-auto w-full max-w-7xl space-y-5 sm:space-y-6">
         <SummaryCards />
 
         <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
