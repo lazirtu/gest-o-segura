@@ -26,7 +26,7 @@ export function AuthShell({
       <div className="bg-gradient-brand relative hidden flex-col justify-between p-12 text-primary-foreground lg:flex">
         <Link to={routes.splash} className="flex items-center gap-3">
           <span className="grid size-10 place-items-center rounded-xl bg-primary-foreground/15 text-sm font-bold backdrop-blur">
-            GF
+            GS
           </span>
           <span className="text-base font-semibold tracking-tight">{appConfig.name}</span>
         </Link>
@@ -63,7 +63,7 @@ export function AuthShell({
             className="mb-8 flex items-center justify-center gap-2.5 lg:hidden"
           >
             <span className="bg-gradient-brand grid size-10 place-items-center rounded-xl text-sm font-bold text-primary-foreground">
-              GF
+              GS
             </span>
             <span className="text-lg font-semibold tracking-tight">{appConfig.name}</span>
           </Link>

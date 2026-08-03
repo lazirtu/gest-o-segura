@@ -3,7 +3,7 @@
  * Mantenha aqui valores estáticos compartilhados entre módulos.
  */
 export const appConfig = {
-  name: "Gestão Financeira",
+  name: "Gestão Segura",
   description:
     "Plataforma para organizar receitas, despesas e planejamento financeiro com clareza.",
   locale: "pt-BR",
