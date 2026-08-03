@@ -16,9 +16,9 @@ export const Route = createFileRoute("/redefinir-senha")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Definir nova senha — Gestão Financeira" },
+      { title: "Definir nova senha — Gestão Segura" },
       { name: "description", content: "Defina uma nova senha para sua conta." },
-      { property: "og:title", content: "Definir nova senha — Gestão Financeira" },
+      { property: "og:title", content: "Definir nova senha — Gestão Segura" },
       { property: "og:description", content: "Defina uma nova senha para sua conta." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

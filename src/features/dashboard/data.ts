@@ -3,18 +3,29 @@
  * Placeholder visual até a integração com os módulos financeiros.
  */
 
-export type RangeKey = "30d" | "3m" | "6m";
+export type RangeKey = "7d" | "30d" | "3m" | "6m" | "1a";
 
 export const rangeOptions: { key: RangeKey; label: string }[] = [
+  { key: "7d", label: "7 dias" },
   { key: "30d", label: "30 dias" },
   { key: "3m", label: "3 meses" },
   { key: "6m", label: "6 meses" },
+  { key: "1a", label: "1 ano" },
 ];
 
 export const evolutionSeries: Record<
   RangeKey,
   { label: string; receitas: number; despesas: number }[]
 > = {
+  "7d": [
+    { label: "Seg", receitas: 420, despesas: 260 },
+    { label: "Ter", receitas: 380, despesas: 310 },
+    { label: "Qua", receitas: 610, despesas: 280 },
+    { label: "Qui", receitas: 520, despesas: 470 },
+    { label: "Sex", receitas: 760, despesas: 390 },
+    { label: "Sáb", receitas: 340, despesas: 520 },
+    { label: "Dom", receitas: 290, despesas: 180 },
+  ],
   "30d": [
     { label: "01", receitas: 1800, despesas: 1200 },
     { label: "07", receitas: 2400, despesas: 1500 },
@@ -28,6 +39,20 @@ export const evolutionSeries: Record<
     { label: "Jul", receitas: 9800, despesas: 6400 },
   ],
   "6m": [
+    { label: "Fev", receitas: 7400, despesas: 5900 },
+    { label: "Mar", receitas: 7900, despesas: 6300 },
+    { label: "Abr", receitas: 8600, despesas: 5800 },
+    { label: "Mai", receitas: 8200, despesas: 6100 },
+    { label: "Jun", receitas: 9100, despesas: 6800 },
+    { label: "Jul", receitas: 9800, despesas: 6400 },
+  ],
+  "1a": [
+    { label: "Ago", receitas: 6900, despesas: 5400 },
+    { label: "Set", receitas: 7100, despesas: 5600 },
+    { label: "Out", receitas: 7600, despesas: 6200 },
+    { label: "Nov", receitas: 8100, despesas: 6900 },
+    { label: "Dez", receitas: 9400, despesas: 8200 },
+    { label: "Jan", receitas: 7000, despesas: 6100 },
     { label: "Fev", receitas: 7400, despesas: 5900 },
     { label: "Mar", receitas: 7900, despesas: 6300 },
     { label: "Abr", receitas: 8600, despesas: 5800 },

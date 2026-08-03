@@ -15,10 +15,10 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/auth/cadastro")({
   head: () => ({
     meta: [
-      { title: "Criar conta — Gestão Financeira" },
-      { name: "description", content: "Crie sua conta no Gestão Financeira." },
-      { property: "og:title", content: "Criar conta — Gestão Financeira" },
-      { property: "og:description", content: "Crie sua conta no Gestão Financeira." },
+      { title: "Criar conta — Gestão Segura" },
+      { name: "description", content: "Crie sua conta no Gestão Segura." },
+      { property: "og:title", content: "Criar conta — Gestão Segura" },
+      { property: "og:description", content: "Crie sua conta no Gestão Segura." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

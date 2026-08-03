@@ -12,12 +12,12 @@ import {
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — Gestão Financeira" },
+      { title: "Dashboard — Gestão Segura" },
       {
         name: "description",
         content: "Saldo, receitas, despesas, metas e vencimentos em um só painel.",
       },
-      { property: "og:title", content: "Dashboard — Gestão Financeira" },
+      { property: "og:title", content: "Dashboard — Gestão Segura" },
       {
         property: "og:description",
         content: "Saldo, receitas, despesas, metas e vencimentos em um só painel.",
@@ -31,16 +31,16 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function DashboardPage() {
   return (
-    <AppLayout title="Visão geral" subtitle="Bem-vindo ao Gestão Financeira">
-      <div className="animate-fade-in mx-auto w-full max-w-7xl space-y-5">
+    <AppLayout title="Visão geral" subtitle="Bem-vindo ao Gestão Segura">
+      <div className="animate-fade-in mx-auto w-full max-w-7xl space-y-5 sm:space-y-6">
         <SummaryCards />
 
-        <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
+        <div className="grid gap-5 sm:gap-6 xl:grid-cols-[1.6fr_1fr]">
           <EvolutionChart />
           <UpcomingBills />
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
+        <div className="grid gap-5 sm:gap-6 xl:grid-cols-[1.6fr_1fr]">
           <RecentTransactions />
           <GoalsProgress />
         </div>
