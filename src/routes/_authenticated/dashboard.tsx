@@ -35,12 +35,12 @@ function DashboardPage() {
       <div className="animate-fade-in mx-auto w-full max-w-7xl space-y-5 sm:space-y-6">
         <SummaryCards />
 
-        <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
+        <div className="grid gap-5 sm:gap-6 xl:grid-cols-[1.6fr_1fr]">
           <EvolutionChart />
           <UpcomingBills />
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[1.6fr_1fr]">
+        <div className="grid gap-5 sm:gap-6 xl:grid-cols-[1.6fr_1fr]">
           <RecentTransactions />
           <GoalsProgress />
         </div>
