@@ -20,8 +20,8 @@ export function AppLayout({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader title={title} subtitle={subtitle} onOpenMenu={() => setMenuOpen(true)} />
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
-        <footer className="px-4 pb-8 text-xs text-muted-foreground sm:px-6 lg:px-8">
+        <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">{children}</main>
+        <footer className="mx-auto w-full max-w-7xl px-4 pb-8 text-xs text-muted-foreground sm:px-6 lg:px-8">
           Gestão Segura — seus dados, organizados com clareza.
         </footer>
       </div>
