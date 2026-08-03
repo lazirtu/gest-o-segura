@@ -8,9 +8,9 @@ export const Route = createFileRoute("/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Gestão Financeira — Suas finanças organizadas" },
+      { title: "Gestão Segura — Suas finanças organizadas" },
       { name: "description", content: appConfig.description },
-      { property: "og:title", content: "Gestão Financeira" },
+      { property: "og:title", content: "Gestão Segura" },
       { property: "og:description", content: appConfig.description },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

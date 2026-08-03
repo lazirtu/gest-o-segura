@@ -22,7 +22,7 @@ export function AppLayout({
         <AppHeader title={title} subtitle={subtitle} onOpenMenu={() => setMenuOpen(true)} />
         <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
         <footer className="px-4 pb-8 text-xs text-muted-foreground sm:px-6 lg:px-8">
-          Gestão Financeira — seus dados, organizados com clareza.
+          Gestão Segura — seus dados, organizados com clareza.
         </footer>
       </div>
     </div>

@@ -80,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Gestão Financeira — Controle financeiro premium" },
+      { title: "Gestão Segura — Controle financeiro premium" },
       {
         name: "description",
         content:
           "Organize saldo, receitas, despesas e metas em um painel financeiro moderno.",
       },
-      { name: "author", content: "Gestão Financeira" },
-      { property: "og:title", content: "Gestão Financeira" },
+      { name: "author", content: "Gestão Segura" },
+      { property: "og:title", content: "Gestão Segura" },
       {
         property: "og:description",
         content:

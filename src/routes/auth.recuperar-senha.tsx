@@ -18,9 +18,9 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/auth/recuperar-senha")({
   head: () => ({
     meta: [
-      { title: "Recuperar senha — Gestão Financeira" },
+      { title: "Recuperar senha — Gestão Segura" },
       { name: "description", content: "Receba um link para redefinir sua senha." },
-      { property: "og:title", content: "Recuperar senha — Gestão Financeira" },
+      { property: "og:title", content: "Recuperar senha — Gestão Segura" },
       { property: "og:description", content: "Receba um link para redefinir sua senha." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
