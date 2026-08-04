@@ -17,7 +17,7 @@ const items = [
   { title: "Transações", url: routes.dashboard, icon: ArrowLeftRight },
   { title: "Metas", url: routes.dashboard, icon: Target },
   { title: "Relatórios", url: routes.dashboard, icon: PieChart },
-  { title: "Configurações", url: routes.dashboard, icon: Settings },
+  { title: "Configurações", url: routes.settings, icon: Settings },
 ];
 
 export function AppSidebar({
@@ -78,7 +78,8 @@ export function AppSidebar({
             Menu
           </p>
           {items.map((item, index) => {
-            const active = index === 0 && pathname === item.url;
+            const active =
+              pathname === item.url && (index === 0 || item.url !== routes.dashboard);
             return (
               <Link
                 key={item.title}
