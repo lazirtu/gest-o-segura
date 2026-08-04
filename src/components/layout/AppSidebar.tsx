@@ -78,7 +78,8 @@ export function AppSidebar({
             Menu
           </p>
           {items.map((item, index) => {
-            const active = index === 0 && pathname === item.url;
+            const active =
+              pathname === item.url && (index === 0 || item.url !== routes.dashboard);
             return (
               <Link
                 key={item.title}
