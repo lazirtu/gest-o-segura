@@ -21,4 +21,5 @@ export const routes = {
   forgotPassword: "/auth/recuperar-senha",
   resetPassword: "/redefinir-senha",
   dashboard: "/dashboard",
+  settings: "/configuracoes",
 } as const;

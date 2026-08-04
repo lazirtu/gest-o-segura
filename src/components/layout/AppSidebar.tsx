@@ -17,7 +17,7 @@ const items = [
   { title: "Transações", url: routes.dashboard, icon: ArrowLeftRight },
   { title: "Metas", url: routes.dashboard, icon: Target },
   { title: "Relatórios", url: routes.dashboard, icon: PieChart },
-  { title: "Configurações", url: routes.dashboard, icon: Settings },
+  { title: "Configurações", url: routes.settings, icon: Settings },
 ];
 
 export function AppSidebar({
