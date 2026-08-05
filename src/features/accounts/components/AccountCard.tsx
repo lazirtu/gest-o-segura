@@ -89,7 +89,10 @@ export function AccountCard({
                 </>
               )}
             </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onSelect={onDelete}>
+            <DropdownMenuItem
+              onSelect={onDelete}
+              className="text-destructive focus:text-destructive"
+            >
               <Trash2 className="size-4" /> Excluir
             </DropdownMenuItem>
           </DropdownMenuContent>
