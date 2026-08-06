@@ -22,5 +22,6 @@ export const routes = {
   resetPassword: "/redefinir-senha",
   dashboard: "/dashboard",
   accounts: "/contas",
+  transactions: "/transactions",
   settings: "/configuracoes",
 } as const;

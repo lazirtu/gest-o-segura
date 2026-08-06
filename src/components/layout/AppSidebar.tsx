@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 const items = [
   { title: "Visão geral", url: routes.dashboard, icon: LayoutDashboard },
   { title: "Contas", url: routes.accounts, icon: Wallet },
-  { title: "Transações", url: routes.dashboard, icon: ArrowLeftRight },
+  { title: "Transações", url: routes.transactions, icon: ArrowLeftRight },
   { title: "Metas", url: routes.dashboard, icon: Target },
   { title: "Relatórios", url: routes.dashboard, icon: PieChart },
   { title: "Configurações", url: routes.settings, icon: Settings },
