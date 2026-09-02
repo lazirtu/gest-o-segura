@@ -200,10 +200,12 @@ export function AccountFormDialog({
                 type="number"
                 step="0.01"
                 value={values.currentBalance}
-                onChange={(e) =>
-                  setValues((v) => ({ ...v, currentBalance: Number(e.target.value) }))
-                }
+                readOnly
+                disabled
               />
+              <p className="text-xs text-muted-foreground">
+                Calculado a partir do saldo inicial e das transações.
+              </p>
             </div>
           </div>
 
