@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { summary } from "@/features/dashboard/data";
+import { goalPercent, type DashboardGoal } from "@/features/dashboard/useDashboard";
 
 type Card = {
   label: string;
@@ -13,42 +13,52 @@ type Card = {
   tone: "brand" | "success" | "destructive";
 };
 
-const goalPercent = Math.round((summary.goal.current / summary.goal.target) * 100);
+export function SummaryCards({
+  balance,
+  income,
+  expenses,
+  mainGoal,
+}: {
+  balance: number;
+  income: number;
+  expenses: number;
+  mainGoal: DashboardGoal | null;
+}) {
+  const percent = mainGoal ? goalPercent(mainGoal) : 0;
 
-const cards: Card[] = [
-  {
-    label: "Saldo total",
-    value: formatCurrency(summary.balance),
-    hint: "Todas as contas",
-    icon: Wallet,
-    tone: "brand",
-  },
-  {
-    label: "Receitas",
-    value: formatCurrency(summary.income),
-    hint: "+12,4% vs. mês anterior",
-    icon: ArrowUpRight,
-    tone: "success",
-  },
-  {
-    label: "Despesas",
-    value: formatCurrency(summary.expenses),
-    hint: "-5,8% vs. mês anterior",
-    icon: ArrowDownRight,
-    tone: "destructive",
-  },
-  {
-    label: "Meta principal",
-    value: `${goalPercent}%`,
-    hint: summary.goal.name,
-    icon: Target,
-    tone: "brand",
-  },
-];
+  const cards: Card[] = [
+    {
+      label: "Saldo total",
+      value: formatCurrency(balance),
+      hint: "Todas as contas",
+      icon: Wallet,
+      tone: "brand",
+    },
+    {
+      label: "Receitas",
+      value: formatCurrency(income),
+      hint: "Total registrado",
+      icon: ArrowUpRight,
+      tone: "success",
+    },
+    {
+      label: "Despesas",
+      value: formatCurrency(expenses),
+      hint: "Total registrado",
+      icon: ArrowDownRight,
+      tone: "destructive",
+    },
+    {
+      label: "Meta principal",
+      value: mainGoal ? `${percent}%` : "—",
+      hint: mainGoal ? mainGoal.name : "Nenhuma meta cadastrada",
+      icon: Target,
+      tone: "brand",
+    },
+  ];
 
-const [balanceCard, ...secondaryCards] = cards;
+  const [balanceCard, ...secondaryCards] = cards;
 
-export function SummaryCards() {
   return (
     <div className="grid gap-4 lg:grid-cols-[1.15fr_2fr]">
       {balanceCard ? (
@@ -77,11 +87,11 @@ export function SummaryCards() {
           <div className="relative mt-6 flex items-center gap-4 border-t border-primary-foreground/15 pt-4 text-xs">
             <span className="flex items-center gap-1.5 text-primary-foreground/80">
               <ArrowUpRight className="size-3.5" />
-              {formatCurrency(summary.income)}
+              {formatCurrency(income)}
             </span>
             <span className="flex items-center gap-1.5 text-primary-foreground/80">
               <ArrowDownRight className="size-3.5" />
-              {formatCurrency(summary.expenses)}
+              {formatCurrency(expenses)}
             </span>
           </div>
         </article>
@@ -124,11 +134,11 @@ export function SummaryCards() {
               {card.hint}
             </p>
 
-            {card.label === "Meta principal" ? (
+            {card.label === "Meta principal" && mainGoal ? (
               <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-muted">
                 <div
                   className="bg-gradient-success h-full rounded-full transition-all duration-700"
-                  style={{ width: `${goalPercent}%` }}
+                  style={{ width: `${percent}%` }}
                 />
               </div>
             ) : null}
