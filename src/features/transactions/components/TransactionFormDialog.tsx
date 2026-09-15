@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,17 +20,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useCategories } from "@/features/categories/useCategories";
+import { supabase } from "@/integrations/supabase/client";
 import {
-  transactionCategories,
   transactionStatuses,
   transactionTypes,
   type Transaction,
-  type TransactionCategory,
   type TransactionFormValues,
   type TransactionStatus,
   type TransactionType,
 } from "@/features/transactions/types";
 import { cn } from "@/lib/utils";
+
+const NONE = "none";
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -40,8 +42,8 @@ const emptyForm: TransactionFormValues = {
   description: "",
   amount: 0,
   type: "expense",
-  category: "others",
-  account: "",
+  categoryId: null,
+  accountId: null,
   date: today(),
   status: "paid",
   notes: "",
@@ -56,24 +58,46 @@ export function TransactionFormDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   transaction?: Transaction | undefined;
-  onSubmit: (values: TransactionFormValues) => void;
+  onSubmit: (values: TransactionFormValues) => Promise<boolean> | void;
 }) {
   const [values, setValues] = useState<TransactionFormValues>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [accountOptions, setAccountOptions] = useState<{ id: string; name: string }[]>(
+    [],
+  );
+  const { categories, create: createCategory } = useCategories();
+  const [newCategory, setNewCategory] = useState("");
+
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
+    void (async () => {
+      const { data } = await supabase
+        .from("accounts")
+        .select("id, name")
+        .eq("archived", false)
+        .order("name", { ascending: true });
+      if (active) setAccountOptions(data ?? []);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
     setErrors({});
     setSaving(false);
+    setNewCategory("");
     setValues(
       transaction
         ? {
             description: transaction.description,
             amount: transaction.amount,
             type: transaction.type,
-            category: transaction.category,
-            account: transaction.account,
+            categoryId: transaction.categoryId,
+            accountId: transaction.accountId,
             date: transaction.date,
             status: transaction.status,
             notes: transaction.notes,
@@ -82,12 +106,24 @@ export function TransactionFormDialog({
     );
   }, [open, transaction]);
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleAddCategory() {
+    const name = newCategory.trim();
+    if (!name) return;
+    const created = await createCategory(
+      name,
+      values.type === "income" ? "income" : "expense",
+    );
+    if (created) {
+      setValues((v) => ({ ...v, categoryId: created.id }));
+      setNewCategory("");
+    }
+  }
+
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const nextErrors: Record<string, string> = {};
-    if (!values.description.trim())
-      nextErrors["description"] = "Informe a descrição.";
-    if (!values.account.trim()) nextErrors["account"] = "Informe a conta.";
+    if (!values.description.trim()) nextErrors["description"] = "Informe a descrição.";
+    if (!values.accountId) nextErrors["account"] = "Selecione a conta.";
     if (!values.date) nextErrors["date"] = "Informe a data.";
     if (!Number.isFinite(values.amount) || Math.abs(values.amount) <= 0)
       nextErrors["amount"] = "Informe um valor maior que zero.";
@@ -95,18 +131,19 @@ export function TransactionFormDialog({
     if (Object.keys(nextErrors).length > 0) return;
 
     setSaving(true);
-    setTimeout(() => {
-      onSubmit({
-        ...values,
-        description: values.description.trim(),
-        account: values.account.trim(),
-        notes: values.notes.trim(),
-        amount: Math.abs(values.amount),
-      });
-      setSaving(false);
-      onOpenChange(false);
-    }, 450);
+    const ok = await onSubmit({
+      ...values,
+      description: values.description.trim(),
+      notes: values.notes.trim(),
+      amount: Math.abs(values.amount),
+    });
+    setSaving(false);
+    if (ok !== false) onOpenChange(false);
   }
+
+  const visibleCategories = categories.filter((category) =>
+    values.type === "income" ? category.type === "income" : category.type === "expense",
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -133,7 +170,11 @@ export function TransactionFormDialog({
                     key={item.value}
                     type="button"
                     onClick={() =>
-                      setValues((v) => ({ ...v, type: item.value as TransactionType }))
+                      setValues((v) => ({
+                        ...v,
+                        type: item.value as TransactionType,
+                        categoryId: null,
+                      }))
                     }
                     className={cn(
                       "focus-ring rounded-2xl border px-3 py-2.5 text-xs font-semibold transition-all duration-200",
@@ -197,22 +238,41 @@ export function TransactionFormDialog({
             <div className="space-y-2">
               <Label>Categoria</Label>
               <Select
-                value={values.category}
+                value={values.categoryId ?? NONE}
                 onValueChange={(value) =>
-                  setValues((v) => ({ ...v, category: value as TransactionCategory }))
+                  setValues((v) => ({ ...v, categoryId: value === NONE ? null : value }))
                 }
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Sem categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  {transactionCategories.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.label}
+                  <SelectItem value={NONE}>Sem categoria</SelectItem>
+                  {visibleCategories.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              <div className="flex items-center gap-2">
+                <Input
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  placeholder="Nova categoria"
+                  aria-label="Nova categoria"
+                  className="h-9"
+                />
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  aria-label="Adicionar categoria"
+                  onClick={() => void handleAddCategory()}
+                >
+                  <Plus className="size-4" />
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -237,13 +297,27 @@ export function TransactionFormDialog({
             </div>
 
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="tx-account">Conta</Label>
-              <Input
-                id="tx-account"
-                value={values.account}
-                onChange={(e) => setValues((v) => ({ ...v, account: e.target.value }))}
-                placeholder="Conta principal"
-              />
+              <Label>Conta</Label>
+              <Select
+                value={values.accountId ?? ""}
+                onValueChange={(value) => setValues((v) => ({ ...v, accountId: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a conta" />
+                </SelectTrigger>
+                <SelectContent>
+                  {accountOptions.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {accountOptions.length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  Cadastre uma conta antes de registrar transações.
+                </p>
+              ) : null}
               {errors["account"] ? (
                 <p className="text-xs text-destructive">{errors["account"]}</p>
               ) : null}
@@ -266,6 +340,7 @@ export function TransactionFormDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              disabled={saving}
             >
               Cancelar
             </Button>
