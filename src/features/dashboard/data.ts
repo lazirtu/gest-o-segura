@@ -1,7 +1,4 @@
-/**
- * Dados de apresentação do dashboard.
- * Placeholder visual até a integração com os módulos financeiros.
- */
+/** Configuração e agregações do dashboard a partir de dados reais. */
 
 export type RangeKey = "7d" | "30d" | "3m" | "6m" | "1a";
 
@@ -13,79 +10,73 @@ export const rangeOptions: { key: RangeKey; label: string }[] = [
   { key: "1a", label: "1 ano" },
 ];
 
-export const evolutionSeries: Record<
-  RangeKey,
-  { label: string; receitas: number; despesas: number }[]
-> = {
-  "7d": [
-    { label: "Seg", receitas: 420, despesas: 260 },
-    { label: "Ter", receitas: 380, despesas: 310 },
-    { label: "Qua", receitas: 610, despesas: 280 },
-    { label: "Qui", receitas: 520, despesas: 470 },
-    { label: "Sex", receitas: 760, despesas: 390 },
-    { label: "Sáb", receitas: 340, despesas: 520 },
-    { label: "Dom", receitas: 290, despesas: 180 },
-  ],
-  "30d": [
-    { label: "01", receitas: 1800, despesas: 1200 },
-    { label: "07", receitas: 2400, despesas: 1500 },
-    { label: "14", receitas: 2100, despesas: 1750 },
-    { label: "21", receitas: 3200, despesas: 1900 },
-    { label: "28", receitas: 2900, despesas: 1600 },
-  ],
-  "3m": [
-    { label: "Mai", receitas: 8200, despesas: 6100 },
-    { label: "Jun", receitas: 9100, despesas: 6800 },
-    { label: "Jul", receitas: 9800, despesas: 6400 },
-  ],
-  "6m": [
-    { label: "Fev", receitas: 7400, despesas: 5900 },
-    { label: "Mar", receitas: 7900, despesas: 6300 },
-    { label: "Abr", receitas: 8600, despesas: 5800 },
-    { label: "Mai", receitas: 8200, despesas: 6100 },
-    { label: "Jun", receitas: 9100, despesas: 6800 },
-    { label: "Jul", receitas: 9800, despesas: 6400 },
-  ],
-  "1a": [
-    { label: "Ago", receitas: 6900, despesas: 5400 },
-    { label: "Set", receitas: 7100, despesas: 5600 },
-    { label: "Out", receitas: 7600, despesas: 6200 },
-    { label: "Nov", receitas: 8100, despesas: 6900 },
-    { label: "Dez", receitas: 9400, despesas: 8200 },
-    { label: "Jan", receitas: 7000, despesas: 6100 },
-    { label: "Fev", receitas: 7400, despesas: 5900 },
-    { label: "Mar", receitas: 7900, despesas: 6300 },
-    { label: "Abr", receitas: 8600, despesas: 5800 },
-    { label: "Mai", receitas: 8200, despesas: 6100 },
-    { label: "Jun", receitas: 9100, despesas: 6800 },
-    { label: "Jul", receitas: 9800, despesas: 6400 },
-  ],
-};
+export interface EvolutionPoint {
+  label: string;
+  receitas: number;
+  despesas: number;
+}
 
-export const summary = {
-  balance: 24580.4,
-  income: 9800,
-  expenses: 6400,
-  goal: { name: "Reserva de emergência", current: 12400, target: 20000 },
-};
+export interface EvolutionInput {
+  date: string;
+  amount: number;
+  type: string;
+}
 
-export const recentTransactions = [
-  { id: "1", title: "Salário", category: "Renda", date: "05 jul", amount: 7800 },
-  { id: "2", title: "Aluguel", category: "Moradia", date: "04 jul", amount: -2200 },
-  { id: "3", title: "Supermercado", category: "Alimentação", date: "03 jul", amount: -486.9 },
-  { id: "4", title: "Freelance", category: "Renda extra", date: "02 jul", amount: 2000 },
-  { id: "5", title: "Streaming", category: "Assinaturas", date: "01 jul", amount: -59.9 },
-];
+const dayFormatter = new Intl.DateTimeFormat("pt-BR", { weekday: "short" });
+const monthFormatter = new Intl.DateTimeFormat("pt-BR", { month: "short" });
 
-export const upcomingBills = [
-  { id: "1", title: "Cartão de crédito", due: "Vence em 3 dias", amount: 1840.5 },
-  { id: "2", title: "Energia elétrica", due: "Vence em 6 dias", amount: 268.3 },
-  { id: "3", title: "Internet", due: "Vence em 9 dias", amount: 129.9 },
-  { id: "4", title: "Plano de saúde", due: "Vence em 12 dias", amount: 612 },
-];
+function isoDay(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
 
-export const goals = [
-  { id: "1", name: "Reserva de emergência", current: 12400, target: 20000 },
-  { id: "2", name: "Viagem de fim de ano", current: 3400, target: 8000 },
-  { id: "3", name: "Troca de notebook", current: 2100, target: 6500 },
-];
+/** Agrupa transações por dia ou mês conforme o período selecionado. */
+export function buildEvolutionSeries(
+  transactions: EvolutionInput[],
+  range: RangeKey,
+): EvolutionPoint[] {
+  const today = new Date();
+  const buckets = new Map<string, EvolutionPoint>();
+  const order: string[] = [];
+
+  if (range === "7d" || range === "30d") {
+    const days = range === "7d" ? 7 : 30;
+    for (let index = days - 1; index >= 0; index -= 1) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - index);
+      const key = isoDay(date);
+      const label =
+        range === "7d"
+          ? dayFormatter.format(date).replace(".", "")
+          : String(date.getDate()).padStart(2, "0");
+      buckets.set(key, { label, receitas: 0, despesas: 0 });
+      order.push(key);
+    }
+  } else {
+    const months = range === "3m" ? 3 : range === "6m" ? 6 : 12;
+    for (let index = months - 1; index >= 0; index -= 1) {
+      const date = new Date(today.getFullYear(), today.getMonth() - index, 1);
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      buckets.set(key, {
+        label: monthFormatter.format(date).replace(".", ""),
+        receitas: 0,
+        despesas: 0,
+      });
+      order.push(key);
+    }
+  }
+
+  for (const transaction of transactions) {
+    if (!transaction.date) continue;
+    const key =
+      range === "7d" || range === "30d"
+        ? transaction.date.slice(0, 10)
+        : transaction.date.slice(0, 7);
+    const bucket = buckets.get(key);
+    if (!bucket) continue;
+    const value = Math.abs(Number(transaction.amount) || 0);
+    if (transaction.type === "income") bucket.receitas += value;
+    if (transaction.type === "expense") bucket.despesas += value;
+  }
+
+  return order.map((key) => buckets.get(key)!);
+}

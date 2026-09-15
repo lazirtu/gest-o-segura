@@ -102,21 +102,27 @@ export function TransactionsPage() {
     return { income, expense, balance: income - expense };
   }, [transactions]);
 
-  function handleSubmit(values: TransactionFormValues) {
-    if (editing) {
-      update(editing.id, values);
-      toast.success("Transação atualizada com sucesso.");
+  async function handleSubmit(values: TransactionFormValues) {
+    const ok = editing ? await update(editing.id, values) : await create(values);
+    if (ok) {
+      toast.success(
+        editing ? "Transação atualizada com sucesso." : "Transação criada com sucesso.",
+      );
+      setEditing(undefined);
     } else {
-      create(values);
-      toast.success("Transação criada com sucesso.");
+      toast.error("Não foi possível salvar a transação. Tente novamente.");
     }
-    setEditing(undefined);
+    return ok;
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!deleting) return;
-    remove(deleting.id);
-    toast.success(`${deleting.description} foi excluída.`);
+    const ok = await remove(deleting.id);
+    toast[ok ? "success" : "error"](
+      ok
+        ? `${deleting.description} foi excluída.`
+        : "Não foi possível excluir a transação.",
+    );
     setDeleting(undefined);
   }
 

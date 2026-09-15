@@ -84,19 +84,25 @@ export function AccountsPage() {
     };
   }, [accounts]);
 
-  function handleSubmit(values: AccountFormValues) {
-    if (editing) {
-      update(editing.id, values);
-      toast.success("Conta atualizada com sucesso.");
+  async function handleSubmit(values: AccountFormValues) {
+    const ok = editing ? await update(editing.id, values) : await create(values);
+    if (ok) {
+      toast.success(
+        editing ? "Conta atualizada com sucesso." : "Conta criada com sucesso.",
+      );
+      setEditing(undefined);
     } else {
-      create(values);
-      toast.success("Conta criada com sucesso.");
+      toast.error("Não foi possível salvar a conta. Tente novamente.");
     }
-    setEditing(undefined);
+    return ok;
   }
 
-  function handleToggleArchive(account: Account) {
-    toggleArchive(account.id);
+  async function handleToggleArchive(account: Account) {
+    const ok = await toggleArchive(account.id);
+    if (!ok) {
+      toast.error("Não foi possível alterar a conta.");
+      return;
+    }
     toast.success(
       account.archived
         ? `${account.name} foi reativada.`
@@ -104,10 +110,12 @@ export function AccountsPage() {
     );
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!deleting) return;
-    remove(deleting.id);
-    toast.success(`${deleting.name} foi excluída.`);
+    const ok = await remove(deleting.id);
+    toast[ok ? "success" : "error"](
+      ok ? `${deleting.name} foi excluída.` : "Não foi possível excluir a conta.",
+    );
     setDeleting(undefined);
   }
 

@@ -6,10 +6,8 @@ import {
 } from "lucide-react";
 
 import {
-  transactionCategories,
   transactionStatuses,
   transactionTypes,
-  type TransactionCategory,
   type TransactionStatus,
   type TransactionType,
 } from "@/features/transactions/types";
@@ -24,8 +22,8 @@ export function transactionTypeLabel(type: TransactionType): string {
   return transactionTypes.find((item) => item.value === type)?.label ?? type;
 }
 
-export function transactionCategoryLabel(category: TransactionCategory): string {
-  return transactionCategories.find((item) => item.value === category)?.label ?? category;
+export function transactionCategoryLabel(category: string | null): string {
+  return category && category.trim() ? category : "Sem categoria";
 }
 
 export function transactionStatusLabel(status: TransactionStatus): string {

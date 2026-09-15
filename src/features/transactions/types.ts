@@ -1,4 +1,4 @@
-/** Tipos do módulo de Transações (apenas interface, sem persistência). */
+/** Tipos do módulo de Transações. */
 
 export const transactionTypes = [
   { value: "income", label: "Receita" },
@@ -16,30 +16,31 @@ export const transactionStatuses = [
 
 export type TransactionStatus = (typeof transactionStatuses)[number]["value"];
 
-export const transactionCategories = [
-  { value: "salary", label: "Salário" },
-  { value: "investments", label: "Investimentos" },
-  { value: "housing", label: "Moradia" },
-  { value: "food", label: "Alimentação" },
-  { value: "transport", label: "Transporte" },
-  { value: "health", label: "Saúde" },
-  { value: "education", label: "Educação" },
-  { value: "leisure", label: "Lazer" },
-  { value: "others", label: "Outros" },
-] as const;
-
-export type TransactionCategory = (typeof transactionCategories)[number]["value"];
-
 export interface Transaction {
   id: string;
   description: string;
   amount: number;
   type: TransactionType;
-  category: TransactionCategory;
+  /** Id da categoria vinculada (pode ser nulo). */
+  categoryId: string | null;
+  /** Nome da categoria já resolvido para exibição. */
+  category: string;
+  /** Id da conta vinculada (pode ser nulo). */
+  accountId: string | null;
+  /** Nome da conta já resolvido para exibição. */
   account: string;
   date: string;
   status: TransactionStatus;
   notes: string;
 }
 
-export type TransactionFormValues = Omit<Transaction, "id">;
+export interface TransactionFormValues {
+  description: string;
+  amount: number;
+  type: TransactionType;
+  categoryId: string | null;
+  accountId: string | null;
+  date: string;
+  status: TransactionStatus;
+  notes: string;
+}

@@ -53,7 +53,7 @@ export function AccountFormDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   account?: Account | undefined;
-  onSubmit: (values: AccountFormValues) => void;
+  onSubmit: (values: AccountFormValues) => Promise<boolean> | void;
 }) {
   const [values, setValues] = useState<AccountFormValues>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -79,7 +79,7 @@ export function AccountFormDialog({
     );
   }, [open, account]);
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const nextErrors: Record<string, string> = {};
     if (!values.name.trim()) nextErrors["name"] = "Informe o nome da conta.";
@@ -89,11 +89,13 @@ export function AccountFormDialog({
     if (Object.keys(nextErrors).length > 0) return;
 
     setSaving(true);
-    setTimeout(() => {
-      onSubmit({ ...values, name: values.name.trim(), institution: values.institution.trim() });
-      setSaving(false);
-      onOpenChange(false);
-    }, 450);
+    const ok = await onSubmit({
+      ...values,
+      name: values.name.trim(),
+      institution: values.institution.trim(),
+    });
+    setSaving(false);
+    if (ok !== false) onOpenChange(false);
   }
 
   return (
