@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -11,7 +11,12 @@ import {
 
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/format";
-import { evolutionSeries, rangeOptions, type RangeKey } from "@/features/dashboard/data";
+import {
+  buildEvolutionSeries,
+  rangeOptions,
+  type EvolutionInput,
+  type RangeKey,
+} from "@/features/dashboard/data";
 
 function ChartTooltip({
   active,
@@ -44,9 +49,16 @@ function ChartTooltip({
   );
 }
 
-export function EvolutionChart() {
+export function EvolutionChart({
+  transactions,
+}: {
+  transactions: EvolutionInput[];
+}) {
   const [range, setRange] = useState<RangeKey>("30d");
-  const data = evolutionSeries[range];
+  const data = useMemo(
+    () => buildEvolutionSeries(transactions, range),
+    [transactions, range],
+  );
 
   return (
     <div className="surface-card animate-rise p-5 sm:p-6">
